@@ -6,10 +6,13 @@
 
 ## Sample
 ```
-mCountdown = new QuartzCountdown.QuartzCountdownBuilder()
-    .durationMs(60000).intervalMs(1000).listener(this, true).build();
-mCountdown.start();//开始计时
+private QuartzCountdown mCountdown;
 
+public void startCountdown() {
+    mCountdown = new QuartzCountdown.QuartzCountdownBuilder()
+        .durationMs(60000).intervalMs(1000).listener(this, true).build();
+    mCountdown.start();//开始计时
+}
 
 ...
 
