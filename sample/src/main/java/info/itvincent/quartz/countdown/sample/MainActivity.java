@@ -41,13 +41,15 @@ public class MainActivity extends AppCompatActivity implements QuartzCountdown.Q
             @Override
             public void onClick(View v) {
                 mCountdown.reset();
-                mRemainTextView.setText(String.valueOf(duration));
+                int roundDuration = Math.round(duration / 1000f);
+                mRemainTextView.setText(String.valueOf(roundDuration));
             }
         });
     }
 
     @Override
     public void onTic(QuartzCountdown quartzCountdown, long remainMs) {
+        remainMs = Math.round(remainMs / 1000f);
         mRemainTextView.setText(String.valueOf(remainMs));
         try {
             Thread.sleep(100);//模拟执行延迟
