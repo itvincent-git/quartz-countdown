@@ -9,10 +9,10 @@ import android.util.Log;
 import java.lang.ref.WeakReference;
 
 /**
- * 倒计时器
- * <li>1.支持weakreference的listener，避免内存泄漏</li>
- * <li>2.自修正interval误差，避免跳秒现象</li>
- * <li>3.release()方法可以释放强引用的listener</li>
+ * Than the system comes with CountDownTimer made the following enhancements
+ * <li>Support WeakReference the listener, to avoid memory leaks. </li>
+ * <li>Self-correction heartbeat error, there will not be more and more problems heartbeat interval, to avoid jumping seconds phenomenon. </li>
+ * <li>The release () method can release the strongly referenced listener. </li>
  *
  * @author zhongyongsheng | http://www.itvincent.info
  */
@@ -38,21 +38,21 @@ public class QuartzCountdown {
 
     public interface QuartzCountdownListener {
         /**
-         * 超过intervalMs后，会触发一次
-         * @param quartzCountdown
-         * @param remainMs 剩余的时长
+         * Will callback when countdown over intervalMs long
+         * @param quartzCountdown current QuartzCountdown
+         * @param remainMs remain time to countdown
          */
         void onTic(QuartzCountdown quartzCountdown, long remainMs);
 
         /**
-         * 倒计时停止，或者被stop()时触发
-         * @param quartzCountdown
+         * Countdown stops, or is triggered by stop ()
+         * @param quartzCountdown current QuartzCountdown
          */
         void onStopped(QuartzCountdown quartzCountdown);
     }
 
     /**
-     * 通过此Builder生成QuartzCountdown
+     * Generate QuartzCountdown from this Builder
      */
     public static class QuartzCountdownBuilder {
         private QuartzCountdown quartzCountdown;
@@ -61,7 +61,7 @@ public class QuartzCountdown {
         }
 
         /**
-         * 倒计时时长（ms）
+         * Countdown time（ms）
          * @param durationMs
          * @return
          */
@@ -71,7 +71,7 @@ public class QuartzCountdown {
         }
 
         /**
-         * 每次onTic的间隔（ms）
+         * Each time onTic interval（ms）
          * @param intervalMs
          * @return
          */
@@ -82,9 +82,9 @@ public class QuartzCountdown {
         }
 
         /**
-         * 设置listener
+         * set listener
          * @param listener
-         * @param isWeakRef 是否弱引用
+         * @param isWeakRef true use WeakReference
          * @return
          */
         public QuartzCountdownBuilder listener(QuartzCountdownListener listener, boolean isWeakRef) {
@@ -106,27 +106,28 @@ public class QuartzCountdown {
     private QuartzCountdown() {}
 
     /**
-     * 开始倒计时，reset后可以重新start
+     * start countdown, will invoke listener.onTic().  will stop when countdown to 0;
      */
     public void start() {
         mHandler.sendMessage(mHandler.obtainMessage(START));
     }
 
     /**
-     * 停止倒计时
+     * stop countdown, and will invoke listener.onStopped()
      */
     public void stop() {
         stopDelay(0);
     }
 
     /**
-     * 重置，然后可以重新start()
+     * reset countdown，and you can start() as you want, will not invoke listener.onStopped()
      */
     public void reset() {
         mHandler.sendMessage(mHandler.obtainMessage(RESET));
     }
+
     /**
-     * 释放引用的listener
+     * release the listener
      */
     public void release() {
         mListener = null;
@@ -177,12 +178,12 @@ public class QuartzCountdown {
 
                         long nowMs = SystemClock.elapsedRealtime();
                         long stopNowDiffMs = mStopTimeMs - nowMs;
-                        if (stopNowDiffMs <= 0) {//已经超过结束时间
+                        if (stopNowDiffMs <= 0) {//Has exceeded the end time
                             stop();
                             return;
                         }
 
-                        if (stopNowDiffMs <= mIntervalMs) {//结束时间小于间隔
+                        if (stopNowDiffMs <= mIntervalMs) {//The end time is less than the interval
                             processOnTic(stopNowDiffMs);
                             nextDelay(stopNowDiffMs);
                             return;
@@ -193,7 +194,7 @@ public class QuartzCountdown {
                         mFixedIntervalMs = stopNowDiffMs % mIntervalMs;
 
                         long delay = mFixedIntervalMs - (SystemClock.elapsedRealtime() - mLastNextMs);
-                        while (delay <= 0) {//onTic运行得比间隔还长
+                        while (delay <= 0) {//onTic method run over an interval
                             delay += mIntervalMs;
                         }
 
