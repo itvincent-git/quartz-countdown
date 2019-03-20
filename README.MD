@@ -21,6 +21,7 @@ public void startCountdown() {
 @Override
 public void onTic(QuartzCountdown quartzCountdown, long remainMs) {
     //invoke every intervalMs
+    int remainSecond = Math.round(remainMs / 1000f)
 }
 
 @Override

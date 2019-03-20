@@ -13,6 +13,7 @@ import java.lang.ref.WeakReference;
  * <li>Support WeakReference the listener, to avoid memory leaks. </li>
  * <li>Self-correction heartbeat error, there will not be more and more problems heartbeat interval, to avoid jumping seconds phenomenon. </li>
  * <li>The release () method can release the strongly referenced listener. </li>
+ * <li>If you still want to convert the remainMs of onTic() to seconds, you could use math.round (remainMs / 1000f) to get the correct number of seconds</li>
  *
  * @author zhongyongsheng | http://www.itvincent.info
  */
